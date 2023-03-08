@@ -11,7 +11,9 @@ intents.messages = True
 intents.message_content = True
 client = discord.Client(intents=intents)
 
+# By default, timer will stop automatically after 12 hours, configure max_hours as needed
 max_hours = 12
+
 sTime = None
 eTime = None
 offset = 0
