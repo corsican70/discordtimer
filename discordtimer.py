@@ -13,7 +13,6 @@ client = discord.Client(intents=intents)
 
 # By default, timer will stop automatically after 12 hours, configure max_hours as needed
 max_hours = 12
-
 sTime = None
 eTime = None
 offset = 0
@@ -90,14 +89,18 @@ async def on_message(message):
 
     if message.content.startswith('~stop'):
         param = message.content[6:]
-        eTime = timer() + offset
-        elapsedSeconds = eTime - sTime
-        elapsed = str(datetime.timedelta(seconds=int(elapsedSeconds)))
-        response = '{} has stopped after {} elapsed'.format(param.capitalize(), elapsed)
-        await message.channel.send(response)
-        sTime = time.perf_counter()
-        offset = 0
-        timerChannel = None
+        if not timerChannel:
+            response = 'No {} is currently running.'.format(param)
+            await message.channel.send(response)
+        else:
+            eTime = timer() + offset
+            elapsedSeconds = eTime - sTime
+            elapsed = str(datetime.timedelta(seconds=int(elapsedSeconds)))
+            response = '{} has stopped after {} elapsed'.format(param.capitalize(), elapsed)
+            await message.channel.send(response)
+            sTime = time.perf_counter()
+            offset = 0
+            timerChannel = None
 
     if message.content.startswith('~check'):
         param = message.content[7:]
@@ -131,4 +134,3 @@ async def check_autostop():
         timerChannel = None
 
 client.run(sys.argv[1])
-
